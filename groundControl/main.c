@@ -77,7 +77,7 @@ int main() {
                 viewLoadedStudents(&list);
                 break;
             case 5:
-                loadStudentsFromFile("gradeData.csv");
+                list = loadStudentsFromFile("gradeData.csv");
                 break;
 
             case 6:
