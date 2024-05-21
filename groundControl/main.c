@@ -4,8 +4,8 @@
 #include <stdio.h> 
 
 int main() {
+    int studentCount;
     int choice;
-
     do {
         displayMenu();
         printf("Enter your choice (0 for Clear): ");
@@ -42,19 +42,51 @@ int main() {
                         system("clear");
                         printf("Recent Logs:\n");
                         const char *filepath = "../groundControl/log.txt";
-                        process_file(filepath);
+                        display_csv_file(filepath);
                         break;
                     default:
                         printf("Invalid choice. Please try again.\n");
                 }
                 break;
             case 4:
-                printf("Exiting...\n");
+                Student students;
+                int studentCount = 0;
+                printf("Enter the student's name (or 'q' to quit): ");
+                char name[100];
+                scanf("%s", name);
+                while (strcmp(name, "q") != 0)
+                {
+                    printf("Enter the student's NPM: ");
+                    int NPM;
+                    scanf("%d", &NPM);
+                    printf("Enter the student's UTS grade: ");
+                    int UTSgrade;
+                    scanf("%d", &UTSgrade);
+                    printf("Enter the student's UAS grade: ");
+                    int UASgrade;
+                    scanf("%d", &UASgrade);
+                    createStudent(&students, name, NPM, UTSgrade, UASgrade);
+                    studentCount++;
+                    printf("Enter the student's name (or 'q' to quit): ");
+                    scanf("%s", name);
+                }
+                saveStudentsToFile("../groundControl/gradeData.csv", &students, studentCount);
+                break;
+            case 5:
+                loadStudentsFromFile("../groundControl/gradeData.csv");
+                break;
+
+            case 6:
+                viewLoadedStudents(&students, "../groundControl/gradeData.csv");
+                break;
+
+            case 7:
+                printf("Exiting....\n");
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 4);
+    } while (choice != 7);
 
     return 0;
 }
