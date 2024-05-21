@@ -1,4 +1,78 @@
-# face-attendance-system
+# Proyek Akhir Pemrograman Lanjut | Class 02 | Group 03
+
+
+# Automated Attendance & Presentation Tracking
+#### Written By :
+
+```
+- Ryan Adidaru Excel Barnabi / 2306266994
+- Teufik Ali Hadzalic / 
+```
+
+#### we are using face-detection model named RetinaFace that was trained using Widerface dataset for face detection, basically taking a frame from camera and turning it into matrices that stored within db folder inside of Silent-Face-Anti-Spoofing folder.
+
+
+
+- You can read more about RetinaFace in this Repo
+```
+https://github.com/biubug6/Pytorch_Retinaface
+```
+
+
+
+
+
+## Installation
+
+### - this project was mainly built on linux, so i think there will be some error while users trying to run on windows because some difference between OS system's command such as
+
+### on Ubuntu Linux and 
+
+```
+system("clear")
+```
+
+### on Windows Operating System
+
+```
+os.system("cls")
+```
+
+
+### Please notice that i hope the reader will edit some source code first then read them thoroughly and adjust to their platform
+
+
+## General Installation Guide
+
+### - Consider using python venv before jumping right in, start the installation by running this on your command line
+
+
+## Windows
+
+```
+pip install -r requirements_windows.txt
+```
+
+## Linux
+
+```
+pip install -r requirements.txt
+```
+
+
+
+#### this project was forked from face-attendance-system and was improved with parallel programming and additional file handling for more speed and efficiency, see documentation down below to learn more about the original repo.
+
+
+
+
+# Documentation
+
+
+
+
+
+<!-- # face-attendance-system
 
 Face attendance system using face recognition with Python !
 
@@ -40,7 +114,7 @@ In Windows, you will need to do a couple of additional steps before starting wit
     pip install -r Silent-Face-Anti-Spoofing/requirements.txt
 
 Remember to add the Silent-Face-Anti-Spoofing directory to your **PYTHONPATH**.
-
+<!-- 
 ## web app
 
 Face attendance + face recognition web app with React and Python!
@@ -53,4 +127,4 @@ Face attendance + face recognition web app with React and Python!
 </p>
 
 The code for this project is available [here](https://github.com/computervisiondeveloper/face-attendance-web-app-react-python).
-
+ -->

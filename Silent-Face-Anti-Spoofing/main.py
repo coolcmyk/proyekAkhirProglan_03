@@ -61,7 +61,7 @@ class App:
 
         label = test(
                 image=self.most_recent_capture_arr,
-                model_dir='Silent-Face-Anti-Spoofing/resources/anti_spoof_models',
+                model_dir='../Silent-Face-Anti-Spoofing/resources/anti_spoof_models',
                 device_id=0
                 )
 
@@ -75,7 +75,11 @@ class App:
             else:
                 util.msg_box('Welcome back !', 'Welcome, {}.'.format(name))
                 with open(self.log_path, 'a') as f:
-                    f.write('{},{},in\n'.format(name, datetime.datetime.now()))
+                    # f.write('{},{},in,\n'.format(name, datetime.datetime.now()))
+                    f.write('{}, {}, in,\n'.format(name, datetime.datetime.now()))
+                    f.close()
+                with open('../groundControl/current_student.txt', 'w') as f:
+                    f.write(name)
                     f.close()
 
         else:
@@ -85,7 +89,7 @@ class App:
 
         label = test(
                 image=self.most_recent_capture_arr,
-                model_dir='Silent-Face-Anti-Spoofing/resources/anti_spoof_models/',
+                model_dir='../Silent-Face-Anti-Spoofing/resources/anti_spoof_models/',
                 device_id=0
                 )
 
@@ -100,6 +104,21 @@ class App:
                 with open(self.log_path, 'a') as f:
                     f.write('{},{},out\n'.format(name, datetime.datetime.now()))
                     f.close()
+
+                with open('../groundControl/current_student.txt', 'r+') as f:
+                    lines = f.readlines()
+                    f.seek(0)
+                    found = False
+                    for line in lines:
+                        if name in line:
+                            found = True
+                            continue
+                        f.write(line)
+                    f.truncate()
+                    if found:
+                        print('Name deleted successfully.')
+                    else:
+                        print('Student does not exist.')
 
         else:
             util.msg_box('Hey, you are a spoofer!', 'You are fake !')

@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "header.h": "c",
+        "unistd.h": "c",
+        "omp.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "dirent.h": "c",
+        "stdbool.h": "c"
+    }
+}
