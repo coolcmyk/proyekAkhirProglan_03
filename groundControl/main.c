@@ -6,6 +6,8 @@
 int main() {
     int studentCount;
     int choice;
+    LinkedList list;
+    initializeList(&list);
     do {
         displayMenu();
         printf("Enter your choice (0 for Clear): ");
@@ -49,13 +51,16 @@ int main() {
                 }
                 break;
             case 4:
-                Student students;
-                int studentCount = 0;
-                printf("Enter the student's name (or 'q' to quit): ");
-                char name[100];
-                scanf("%s", name);
-                while (strcmp(name, "q") != 0)
-                {
+                int studentCount;
+                int studentCumulative = 0;
+                printf("How many Students do you want to input? ");
+                scanf("%d", &studentCount);
+                for(int i = 0; i < studentCount; i++){
+                    studentCumulative++;
+                    Student student;
+                    printf("Enter the student's name: ");
+                    char name[100];
+                    scanf("%s", name);
                     printf("Enter the student's NPM: ");
                     int NPM;
                     scanf("%d", &NPM);
@@ -65,19 +70,18 @@ int main() {
                     printf("Enter the student's UAS grade: ");
                     int UASgrade;
                     scanf("%d", &UASgrade);
-                    createStudent(&students, name, NPM, UTSgrade, UASgrade);
-                    studentCount++;
-                    printf("Enter the student's name (or 'q' to quit): ");
-                    scanf("%s", name);
+                    createStudent(&student, name, NPM, UTSgrade, UASgrade);
+                    insertNode(&list, student);
                 }
-                saveStudentsToFile("../groundControl/gradeData.csv", &students, studentCount);
+                saveStudentsToFile("gradeData.csv", &list);
+                viewLoadedStudents(&list);
                 break;
             case 5:
-                loadStudentsFromFile("../groundControl/gradeData.csv");
+                loadStudentsFromFile("gradeData.csv");
                 break;
 
             case 6:
-                viewLoadedStudents(&students, "../groundControl/gradeData.csv");
+                viewLoadedStudents(&list);
                 break;
 
             case 7:

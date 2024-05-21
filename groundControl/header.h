@@ -10,7 +10,6 @@
 #include <stdbool.h>
 
 #define MAX_LINE_LENGTH 1024
-
 typedef struct {
     char* name;
     int NPM;
@@ -20,99 +19,164 @@ typedef struct {
 } Student;
 
 void createStudent(Student* student, const char* name, int NPM, float utsGrade, float uasGrade) {
-    // Allocate memory for the name
-    student->name = (char*)malloc(strlen(name) + 1);
-    if (student->name == NULL) {
-        printf("Failed to allocate memory for the name.\n");
-        return;
-    }
-    // Copy the name
-    strcpy(student->name, name);
-    // Set the rank and grades
+    student->name = strdup(name);
     student->NPM = NPM;
+    student->rank = 0;
     student->utsGrade = utsGrade;
     student->uasGrade = uasGrade;
 }
 
 void destroyStudent(Student* student) {
-    // Free the memory for the name
     free(student->name);
-    // Reset the struct fields
-    student->name = NULL;
-    student->rank = 0;
-    student->utsGrade = 0.0;
-    student->uasGrade = 0.0;
 }
 
-void saveStudentsToFile(const char* filepath, Student* students, int numStudents) {
+typedef struct Node {
+    Student student;
+    struct Node* next;
+} Node;
+
+Node* createNode(Student student) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printf("Failed to allocate memory for the node.\n");
+        return NULL;
+    }
+    newNode->student = student;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void destroyNode(Node* node) {
+    destroyStudent(&node->student);
+    free(node);
+}
+
+typedef struct {
+    Node* head;
+    Node* tail;
+} LinkedList;
+
+void initializeList(LinkedList* list) {
+    list->head = NULL;
+    list->tail = NULL;
+}
+
+void insertNode(LinkedList* list, Student student) {
+    Node* newNode = createNode(student);
+    if (newNode == NULL) {
+        return;
+    }
+    if (list->head == NULL) {
+        list->head = newNode;
+        list->tail = newNode;
+    } else {
+        list->tail->next = newNode;
+        list->tail = newNode;
+    }
+}
+
+void destroyList(LinkedList* list) {
+    Node* current = list->head;
+    while (current != NULL) {
+        Node* next = current->next;
+        destroyNode(current);
+        current = next;
+    }
+    list->head = NULL;
+    list->tail = NULL;
+}
+
+void saveStudentsToFile(const char* filepath, LinkedList* list) {
     FILE* file = fopen(filepath, "a+");
     if (file == NULL) {
         printf("Failed to open the file for writing.\n");
         return;
     }
-    for (int i = 0; i < numStudents; i++) {
-        fprintf(file, "%s,%d,%.2f,%.2f\n", students[i].name, students[i].NPM, students[i].utsGrade, students[i].uasGrade);
+    Node* current = list->head;
+    while (current != NULL) {
+        fprintf(file, "%s,%d,%.2f,%.2f\n", current->student.name, current->student.NPM, current->student.utsGrade, current->student.uasGrade);
+        current = current->next;
     }
     fclose(file);
 }
 
-
-void viewLoadedStudents(Student* students, const char* filepath) {
-    FILE* file = fopen(filepath, "r");
-    if (file == NULL) {
-        printf("Failed to open the file for reading.\n");
-    }
-    // Count the number of lines in the file
-    int count = 0;
-    char line[256];
-    while (fgets(line, sizeof(line), file)) {
-        count++;
-    }
-    for (int i = 0; i < count; i++) {
+void viewLoadedStudents(LinkedList* list) {
+    // Print the loaded students
+    Node* current = list->head;
+    while (current != NULL) {
         printf("Name: %s, NPM: %d, UTS Grade: %.2f, UAS Grade: %.2f\n",
-               students[i].name, students[i].NPM, students[i].utsGrade, students[i].uasGrade);
+               current->student.name, current->student.NPM, current->student.utsGrade, current->student.uasGrade);
+        current = current->next;
     }
 }
-
-
-Student* loadStudentsFromFile(const char* filepath) {
+LinkedList loadStudentsFromFile(const char* filepath) {
+    LinkedList list;
+    initializeList(&list);
     FILE* file = fopen(filepath, "r");
     if (file == NULL) {
         printf("Failed to open the file for reading.\n");
-        return NULL;
+        return list;
     }
-    // Count the number of lines in the file
-    int count = 0;
-    char line[256];
+    char line[MAX_LINE_LENGTH];
     while (fgets(line, sizeof(line), file)) {
-        count++;
-    }
-    // Allocate memory for the students
-    Student* students = (Student*)malloc(count * sizeof(Student));
-    if (students == NULL) {
-        fclose(file);
-        return NULL;
-    }
-    printf("count: %d\n", count);
-    // Reset the file pointer to the beginning of the file
-    fseek(file, 0, SEEK_SET);
-    // Read the students from the file
-    for (int i = 0; i < count; i++) {
-        char name[256];
-        int rank;
-        int NPM;
-        float utsGrade;
-        float uasGrade;
-        if (fscanf(file, "%255[^,],%d,%f,%f\n", name, &NPM, &utsGrade, &uasGrade) == 4) {
-            createStudent(&students[i], name, NPM, utsGrade, uasGrade);
-        } else {
-            printf("Error parsing line %d.\n", i + 1);
+        char* name = strtok(line, ",");
+        char* npmStr = strtok(NULL, ",");
+        char* utsGradeStr = strtok(NULL, ",");
+        char* uasGradeStr = strtok(NULL, ",");
+        if (name == NULL || npmStr == NULL || utsGradeStr == NULL || uasGradeStr == NULL) {
+            printf("Invalid line format: %s\n", line);
+            continue;
         }
+        int npm = atoi(npmStr);
+        printf("%d", npm);
+        float utsGrade = atof(utsGradeStr);
+        float uasGrade = atof(uasGradeStr);
+        Student student;
+        createStudent(&student, name, npm, utsGrade, uasGrade);
+        insertNode(&list, student);
     }
     fclose(file);
-    // *numStudents = count;
-    return students;
+    return list;
 }
+// int main() {
+//     // Create a linked list
+//     LinkedList list;
+//     initializeList(&list);
+
+//     // Create some students
+//     Student student1;
+//     createStudent(&student1, "John Doe", 1, 85.5, 90.0);
+//     Student student2;
+//     createStudent(&student2, "Jane Smith", 2, 90.0, 95.0);
+//     Student student3;
+//     createStudent(&student3, "Bob Johnson", 3, 80.0, 85.0);
+
+//     // Insert the students into the linked list
+//     insertNode(&list, student1);
+//     insertNode(&list, student2);
+//     insertNode(&list, student3);
+
+//     // Save the students to a file
+//     saveStudentsToFile("students.csv", &list);
+
+//     // View the loaded students from the file
+//     viewLoadedStudents(&list, "students.csv");
+
+//     // Print the loaded students
+//     Node* current = list.head;
+//     while (current != NULL) {
+//         printf("Name: %s, NPM: %d, UTS Grade: %.2f, UAS Grade: %.2f\n",
+//                current->student.name, current->student.NPM, current->student.utsGrade, current->student.uasGrade);
+//         current = current->next;
+//     }
+
+//     // Destroy the linked list
+//     destroyList(&list);
+
+//     return 0;
+// }
+
+
 
 // int main() {
 //     // Create an array of students
@@ -147,29 +211,6 @@ Student* loadStudentsFromFile(const char* filepath) {
 
 //     return 0;
 // }
-
-
-
-
-// int main() {
-//     // Create a student
-//     Student student;
-//     createStudent(&student, "John Doe", 1, 85.5, 90.0);
-//     // Access the student's fields
-//     printf("Name: %s\n", student.name);
-//     printf("Rank: %d\n", student.rank);
-//     printf("UTS Grade: %.2f\n", student.utsGrade);
-//     printf("UAS Grade: %.2f\n", student.uasGrade);
-//     // Destroy the student
-//     destroyStudent(&student);
-//     return 0;
-// }
-
-
-
-
-
-
 
 
 
