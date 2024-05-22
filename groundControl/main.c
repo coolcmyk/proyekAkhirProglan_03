@@ -85,12 +85,16 @@ int main() {
                 break;
 
             case 7:
-                printf("Exiting....\n");
+                destroyList(&list);
+                break;
+
+            case 8:
+                printf("Exiting program...\n");
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 7);
+    } while (choice != 8);
 
     return 0;
 }

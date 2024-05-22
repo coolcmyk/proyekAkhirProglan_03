@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #define MAX_LINE_LENGTH 1024
 typedef struct {
     char* name;
@@ -26,30 +25,11 @@ void createStudent(Student* student, const char* name, int NPM, float utsGrade, 
     student->uasGrade = uasGrade;
 }
 
-void destroyStudent(Student* student) {
-    free(student->name);
-}
-
 typedef struct Node {
     Student student;
     struct Node* next;
 } Node;
 
-Node* createNode(Student student) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    if (newNode == NULL) {
-        printf("Failed to allocate memory for the node.\n");
-        return NULL;
-    }
-    newNode->student = student;
-    newNode->next = NULL;
-    return newNode;
-}
-
-void destroyNode(Node* node) {
-    destroyStudent(&node->student);
-    free(node);
-}
 
 typedef struct {
     Node* head;
@@ -60,6 +40,23 @@ void initializeList(LinkedList* list) {
     list->head = NULL;
     list->tail = NULL;
 }
+
+Node* createNode(Student student) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printf("Failed to allocate memory for a new node.\n");
+        return NULL;
+    }
+    newNode->student = student;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void destroyNode(Node* node) {
+    free(node->student.name);
+    free(node);
+}
+
 
 void insertNode(LinkedList* list, Student student) {
     Node* newNode = createNode(student);
@@ -108,7 +105,9 @@ void viewLoadedStudents(LinkedList* list) {
                current->student.name, current->student.NPM, current->student.utsGrade, current->student.uasGrade);
         current = current->next;
     }
+    printf("Students loaded successfully.\n");
 }
+
 LinkedList loadStudentsFromFile(const char* filepath) {
     LinkedList list;
     initializeList(&list);
@@ -128,7 +127,6 @@ LinkedList loadStudentsFromFile(const char* filepath) {
             continue;
         }
         int npm = atoi(npmStr);
-        printf("%d", npm);
         float utsGrade = atof(utsGradeStr);
         float uasGrade = atof(uasGradeStr);
         Student student;
@@ -431,7 +429,11 @@ void displayMenu() {
     printf("1. Student's Login / Register\n");
     printf("2. User's guide\n");
     printf("3. View Student's status\n");
-    printf("4. Exit\n");
+    printf("4. Input Student's Data\n");
+    printf("5. LOad Student's Data from Database\n");
+    printf("6. View Loaded Student's Data\n");
+    printf("7. Reset Student's list\n");
+    printf("8. Exit\n");
 }
 
 
@@ -460,6 +462,59 @@ void runPythonScripts(const char* path) {
 void showUserGuide() {
     // Code to display the user's guide
     printf("Displaying user's guide...\n");
+    printf("Welcome to the Student Grade Management System!\n\n");
+
+    printf("**Menu**\n");
+    printf("1. Run Anti-Spoofing Script (Requires Python)\n");
+    printf("2. View User Guide\n");
+    printf("3. View Data\n");
+    printf("   - 1. Registered Users\n");
+    printf("   - 2. Recent Logs\n");
+    printf("4. Add Student Grades\n");
+    printf("5. Load Student Grades from File\n");
+    printf("6. View Loaded Students\n");
+    printf("7. Exit\n\n");
+
+    printf("**How to Use**\n");
+
+    printf("1. Run Anti-Spoofing Script (Requires Python):\n");
+    printf("   - This option will attempt to run a Python script located at ../Silent-Face-Anti-Spoofing/main.py.\n");
+    printf("   - Make sure you have Python installed and the script is located in the specified path.\n\n");
+
+    printf("2. View User Guide:\n");
+    printf("   - This option will display the user guide you're currently reading.\n\n");
+
+    printf("3. View Data:\n");
+    printf("   - This option allows you to view registered users and recent logs.\n");
+    printf("     - 1. Registered Users: Shows a list of registered users from the 'groundControl/db' directory.\n");
+    printf("     - 2. Recent Logs: Displays recent logs from 'groundControl/log.txt'.\n\n");
+
+    printf("4. Add Student Grades:\n");
+    printf("   - This option allows you to enter grades for multiple students.\n");
+    printf("     - Enter the number of students you want to add.\n");
+    printf("    - For each student, provide the following information:\n");
+    printf("          - Name\n");
+    printf("          - NPM (Student ID)\n");
+    printf("          - UTS Grade\n");
+    printf("          - UAS Grade\n");
+    printf("   - After entering all student information, their grades will be saved to a file named 'gradeData.csv'.\n\n");
+
+    printf("5. Load Student Grades from File:\n");
+    printf("   - This option will load previously saved student grades from 'gradeData.csv'.\n\n");
+
+    printf("6. View Loaded Students:\n");
+    printf("   - This option will display the list of students whose grades were loaded from the file.\n\n");
+
+    printf("7. Exit:\n");
+    printf("   - This option will terminate the program.\n\n");
+
+    printf("**Please note:**\n");
+    printf(" - Some options require additional files or programs to function properly.\n");
+    printf(" - Ensure you have the necessary files in the specified locations.\n\n");
+
+    printf("**Have a questions?** Feel free to consult the developer for further assistance.\n");
+
+
 }
 
 void viewStatus() {
