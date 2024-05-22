@@ -136,81 +136,6 @@ LinkedList loadStudentsFromFile(const char* filepath) {
     fclose(file);
     return list;
 }
-// int main() {
-//     // Create a linked list
-//     LinkedList list;
-//     initializeList(&list);
-
-//     // Create some students
-//     Student student1;
-//     createStudent(&student1, "John Doe", 1, 85.5, 90.0);
-//     Student student2;
-//     createStudent(&student2, "Jane Smith", 2, 90.0, 95.0);
-//     Student student3;
-//     createStudent(&student3, "Bob Johnson", 3, 80.0, 85.0);
-
-//     // Insert the students into the linked list
-//     insertNode(&list, student1);
-//     insertNode(&list, student2);
-//     insertNode(&list, student3);
-
-//     // Save the students to a file
-//     saveStudentsToFile("students.csv", &list);
-
-//     // View the loaded students from the file
-//     viewLoadedStudents(&list, "students.csv");
-
-//     // Print the loaded students
-//     Node* current = list.head;
-//     while (current != NULL) {
-//         printf("Name: %s, NPM: %d, UTS Grade: %.2f, UAS Grade: %.2f\n",
-//                current->student.name, current->student.NPM, current->student.utsGrade, current->student.uasGrade);
-//         current = current->next;
-//     }
-
-//     // Destroy the linked list
-//     destroyList(&list);
-
-//     return 0;
-// }
-
-
-
-// int main() {
-//     // Create an array of students
-//     Student students[3];
-//     createStudent(&students[0], "John Doe", 1, 85.5, 90.0);
-//     createStudent(&students[1], "Jane Smith", 2, 90.0, 95.0);
-//     createStudent(&students[2], "Bob Johnson", 3, 80.0, 85.0);
-
-//     // Save the students to a file
-//     saveStudentsToFile("students.csv", students, 3);
-
-//     // Load the students from the file
-//     int numStudents;
-//     Student* loadedStudents = loadStudentsFromFile("students.csv", &numStudents);
-//     if (loadedStudents != NULL) {
-//         // Print the loaded students
-//         for (int i = 0; i < numStudents; i++) {
-//             printf("Name: %s, Rank: %d, UTS Grade: %.2f, UAS Grade: %.2f\n",
-//                    loadedStudents[i].name, loadedStudents[i].rank, loadedStudents[i].utsGrade, loadedStudents[i].uasGrade);
-//         }
-//         // Free the memory for the loaded students
-//         for (int i = 0; i < numStudents; i++) {
-//             destroyStudent(&loadedStudents[i]);
-//         }
-//         free(loadedStudents);
-//     }
-
-//     // Destroy the students
-//     for (int i = 0; i < 3; i++) {
-//         destroyStudent(&students[i]);
-//     }
-
-//     return 0;
-// }
-
-
 
 void process_file(const char *filepath) {
     FILE *file = fopen(filepath, "r");
@@ -256,35 +181,6 @@ void process_file(const char *filepath) {
 }
 
 
-
-// void display_csv_file(const char *filepath) {
-//   // Open the CSV file
-//   FILE *fp = fopen(filepath, "r");
-//   if (fp == NULL) {
-//     printf("Error opening file: %s\n", filepath);
-//     return;
-//   }
-
-//   // Read the CSV file line by line
-//   char line[MAX_LINE_LENGTH];
-//   while (fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
-//     char *field;
-
-//     // Get the first field
-//     field = strtok(line, ",");
-//     while (field != NULL) {
-//       // Print the field with a trailing space
-//       printf("%s ", field);
-//       field = strtok(NULL, ",");
-//     }
-
-//     // Print a newline after each line
-//     printf("\n");
-//   }
-
-//   // Close the file
-//   fclose(fp);
-// }
 void display_csv_file(const char *filepath) {
   // Open the CSV file
   FILE *fp = fopen(filepath, "r");

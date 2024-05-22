@@ -34,7 +34,7 @@ int main() {
                 int choice;
                 printf("1. View Registered Users :\n");
                 printf("2. View Realtime Logs :\n");
-                scanf("%d", &choice);
+                scanf("%d", &choice);   
                 switch (choice) {
                     case 1:
                         printf("Registered users:\n");
