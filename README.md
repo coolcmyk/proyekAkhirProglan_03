@@ -6,7 +6,7 @@
 
 ```
 - Ryan Adidaru Excel Barnabi / 2306266994
-- Teufik Ali Hadzalic / 
+- Teufik Ali Hadzalic / 2306267012
 ```
 
 #### we are using face-detection model named RetinaFace that was trained using Widerface dataset for face detection, basically taking a frame from camera and turning it into matrices that stored within db folder inside of Silent-Face-Anti-Spoofing folder.
